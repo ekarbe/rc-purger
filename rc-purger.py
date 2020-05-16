@@ -11,7 +11,7 @@ url = host + "/api/v1/login"
 payload = {"user": username, "password": password}
 r = requests.post(url, data=payload)
 r = r.json()
-if r["success"] == False:
+if r["status"] != "success":
     print("Login failed")
     exit()
 authToken = r["data"]["authToken"]
@@ -34,6 +34,10 @@ roomId = input("Target Room ID:")
 url = host + "/api/v1/im.history?roomId=" + roomId + "&count=100"
 r = requests.get(url, headers=headers)
 his = r.json()
+if(his["success"] == False):
+    print("Error while getting history")
+    print(his)
+    exit()
 
 url = host + "/api/v1/im.counters?roomId=" + roomId
 r = requests.get(url, headers=headers)
@@ -53,9 +57,14 @@ for i in tqdm(range(math.ceil(msgs/100))):
                 print("Something went wrong!")
                 print(success.json())
             sleep(6)
+    sleep(15)
     url = host + "/api/v1/im.history?roomId=" + \
         roomId + "&count=100&latest=" + latest
     r = requests.get(url, headers=headers)
     his = r.json()
+    if(his["success"] == False):
+        print("Error while getting history")
+        print(his)
+        exit()
 
 print("Finished the purge!")
