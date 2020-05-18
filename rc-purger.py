@@ -52,7 +52,7 @@ if(msgs == None):
 
 for i in tqdm(range(math.ceil(msgs/100))):
     latest = his["messages"][-1]["ts"]
-    for msg in his["messages"]:
+    for msg in tqdm(his["messages"]):
         if msg["u"]["_id"] == userId:
             url = host + "/api/v1/chat.delete"
             data = {"roomId": roomId, "msgId": msg["_id"]}
